@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shikkha Jatra - Advanced Learning Platform</title>
+    <title>Shikkha Jatra - 10 Minutes School + LiveMCQ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <!-- Top Notification Bar -->
+    <div class="top-notification bg-warning text-dark py-2">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-graduation-cap me-2"></i>
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <i class="fas fa-bullhorn me-2"></i>
+                    <span id="notificationText">🎉 New Live Classes Available! Join Now for Free</span>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-sm btn-outline-dark" onclick="closeNotification()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" style="top: 40px;">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="images/logo.png" alt="Shikkha Jatra" height="30" class="me-2">
                 Shikkha Jatra
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -21,21 +39,53 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
+                        <a class="nav-link" href="#home">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-play-circle me-1"></i>Live Classes
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#live-classes">All Live Classes</a></li>
+                            <li><a class="dropdown-item" href="#upcoming-classes">Upcoming Classes</a></li>
+                            <li><a class="dropdown-item" href="#recorded-classes">Recorded Classes</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-graduation-cap me-1"></i>Courses
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#courses">All Courses</a></li>
+                            <li><a class="dropdown-item" href="#skill-courses">Skill Development</a></li>
+                            <li><a class="dropdown-item" href="#academic-courses">Academic Courses</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-question-circle me-1"></i>Model Tests
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#model-tests">All Model Tests</a></li>
+                            <li><a class="dropdown-item" href="#practice-tests">Practice Tests</a></li>
+                            <li><a class="dropdown-item" href="#mock-exams">Mock Exams</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#courses">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#quiz">Quiz</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="#leaderboard">
+                            <i class="fas fa-trophy me-1"></i>Leaderboard
+                        </a>
                     </li>
                 </ul>
                 <div class="navbar-nav" id="authButtons">
-                    <button class="btn btn-outline-light me-2" onclick="showLoginModal()">Login</button>
-                    <button class="btn btn-light" onclick="showRegisterModal()">Register</button>
+                    <button class="btn btn-outline-light me-2" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                    </button>
+                    <button class="btn btn-warning text-dark fw-bold" onclick="showRegisterModal()">
+                        <i class="fas fa-user-plus me-1"></i>Register Free
+                    </button>
                 </div>
                 <div class="navbar-nav d-none" id="userMenu">
                     <div class="dropdown">
@@ -44,10 +94,22 @@
                             <span id="userName">User</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#dashboard">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="#profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="#my-courses">
+                                <i class="fas fa-book me-2"></i>My Courses
+                            </a></li>
+                            <li><a class="dropdown-item" href="#my-tests">
+                                <i class="fas fa-clipboard-list me-2"></i>My Tests
+                            </a></li>
+                            <li><a class="dropdown-item" href="#certificates">
+                                <i class="fas fa-certificate me-2"></i>Certificates
+                            </a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
                         </ul>
                     </div>
                 </div>
@@ -55,30 +117,153 @@
         </div>
     </nav>
 
-    <main>
+    <main style="margin-top: 100px;">
         <!-- Hero Section -->
         <section id="home" class="hero-section">
             <div class="container">
                 <div class="row align-items-center min-vh-100">
-                    <div class="col-lg-6">
-                        <h1 class="display-4 fw-bold text-white mb-4">
-                            Learn Smart, Learn Fast
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="hero-badge mb-3">
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                <i class="fas fa-star me-1"></i>#1 Educational Platform in Bangladesh
+                            </span>
+                        </div>
+                        <h1 class="display-3 fw-bold text-white mb-4">
+                            Learn Anything in 
+                            <span class="text-warning">10 Minutes</span>
                         </h1>
                         <p class="lead text-white-50 mb-4">
-                            Master new skills with our interactive courses, live quizzes, and personalized learning experience.
+                            Join millions of students learning through our live classes, model tests, and skill development courses. 
+                            From Class 1-12 to professional skills - everything in one place!
                         </p>
-                        <div class="d-flex gap-3">
-                            <button class="btn btn-light btn-lg" onclick="scrollToSection('courses')">
-                                Explore Courses
+                        <div class="hero-stats mb-4">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <h3 class="text-warning fw-bold">30K+</h3>
+                                    <small class="text-white-50">Free Videos</small>
+                                </div>
+                                <div class="col-4">
+                                    <h3 class="text-warning fw-bold">1M+</h3>
+                                    <small class="text-white-50">Students</small>
+                                </div>
+                                <div class="col-4">
+                                    <h3 class="text-warning fw-bold">500+</h3>
+                                    <small class="text-white-50">Live Classes</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <button class="btn btn-warning btn-lg px-4" onclick="scrollToSection('live-classes')">
+                                <i class="fas fa-play-circle me-2"></i>Join Live Class
                             </button>
-                            <button class="btn btn-outline-light btn-lg" onclick="scrollToSection('quiz')">
-                                Take Quiz
+                            <button class="btn btn-outline-light btn-lg px-4" onclick="scrollToSection('model-tests')">
+                                <i class="fas fa-clipboard-list me-2"></i>Take Model Test
                             </button>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="hero-image">
-                            <i class="fas fa-laptop-code fa-10x text-white-50"></i>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="hero-image text-center">
+                            <div class="hero-video-container">
+                                <div class="video-placeholder">
+                                    <i class="fas fa-play-circle fa-8x text-warning mb-3"></i>
+                                    <h5 class="text-white">Watch Sample Class</h5>
+                                    <p class="text-white-50">See how our live classes work</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Classes Section -->
+        <section id="live-classes" class="py-5 bg-light">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h2 class="display-5 fw-bold mb-3">
+                        <i class="fas fa-play-circle text-primary me-3"></i>
+                        Live Interactive Classes
+                    </h2>
+                    <p class="lead text-muted">Join real-time classes and interact with expert teachers</p>
+                </div>
+                
+                <div class="row" id="liveClassesContainer">
+                    <!-- Live classes will be loaded here -->
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg" onclick="loadMoreLiveClasses()">
+                        <i class="fas fa-plus me-2"></i>View All Live Classes
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Tests Section -->
+        <section id="model-tests" class="py-5">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h2 class="display-5 fw-bold mb-3">
+                        <i class="fas fa-clipboard-list text-success me-3"></i>
+                        Model Tests & Practice Exams
+                    </h2>
+                    <p class="lead text-muted">Practice with thousands of exam-style questions</p>
+                </div>
+                
+                <div class="row" id="modelTestsContainer">
+                    <!-- Model tests will be loaded here -->
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-success btn-lg" onclick="loadMoreModelTests()">
+                        <i class="fas fa-plus me-2"></i>View All Model Tests
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses" class="py-5 bg-light">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h2 class="display-5 fw-bold mb-3">
+                        <i class="fas fa-graduation-cap text-info me-3"></i>
+                        Skill Development Courses
+                    </h2>
+                    <p class="lead text-muted">Learn professional skills from industry experts</p>
+                </div>
+                
+                <div class="row" id="coursesContainer">
+                    <!-- Courses will be loaded here -->
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-info btn-lg" onclick="loadMoreCourses()">
+                        <i class="fas fa-plus me-2"></i>View All Courses
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section id="leaderboard" class="py-5">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h2 class="display-5 fw-bold mb-3">
+                        <i class="fas fa-trophy text-warning me-3"></i>
+                        Top Performers
+                    </h2>
+                    <p class="lead text-muted">See who's leading the learning journey</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div id="leaderboardContainer">
+                                    <!-- Leaderboard will be loaded here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

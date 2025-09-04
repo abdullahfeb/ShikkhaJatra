@@ -3,12 +3,17 @@ let currentUser = null;
 let socket = null;
 let currentQuiz = null;
 let quizTimer = null;
+let liveClasses = [];
+let modelTests = [];
+let courses = [];
+let leaderboard = [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
-    loadCourses();
+    loadAllContent();
     checkAuthStatus();
+    initializeNotifications();
 });
 
 // Initialize application
@@ -16,11 +21,62 @@ function initializeApp() {
     // Initialize Socket.io
     socket = io();
     
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+    
     // Setup event listeners
     setupEventListeners();
     
     // Setup smooth scrolling
     setupSmoothScrolling();
+    
+    // Initialize real-time features
+    initializeRealTimeFeatures();
+}
+
+// Initialize real-time features
+function initializeRealTimeFeatures() {
+    socket.on('live-class-started', function(data) {
+        showNotification(`Live class "${data.title}" has started!`, 'success');
+        loadLiveClasses(); // Refresh live classes
+    });
+    
+    socket.on('new-model-test', function(data) {
+        showNotification(`New model test "${data.title}" is available!`, 'info');
+        loadModelTests(); // Refresh model tests
+    });
+    
+    socket.on('leaderboard-updated', function(data) {
+        loadLeaderboard(); // Refresh leaderboard
+    });
+}
+
+// Load all content
+async function loadAllContent() {
+    await Promise.all([
+        loadLiveClasses(),
+        loadModelTests(),
+        loadCourses(),
+        loadLeaderboard()
+    ]);
+}
+
+// Initialize notifications
+function initializeNotifications() {
+    // Show random notifications
+    const notifications = [
+        "🎉 New Live Classes Available! Join Now for Free",
+        "📚 30,000+ Free Educational Videos",
+        "🏆 Join 1M+ Students Learning with Us",
+        "⚡ Take Model Tests and Improve Your Skills",
+        "🎓 Get Certificates for Your Achievements"
+    ];
+    
+    const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+    document.getElementById('notificationText').textContent = randomNotification;
 }
 
 // Setup event listeners
@@ -167,11 +223,231 @@ function hideModal(modalId) {
     if (modal) modal.hide();
 }
 
+// Live Classes Functions
+async function loadLiveClasses() {
+    try {
+        // For demo purposes, create sample live classes
+        liveClasses = [
+            {
+                id: 1,
+                title: "Mathematics Class 10 - Algebra",
+                teacher: "Dr. Rahman",
+                time: "10:00 AM",
+                duration: "45 min",
+                students: 1250,
+                isLive: true,
+                thumbnail: "fas fa-calculator"
+            },
+            {
+                id: 2,
+                title: "English Grammar - Tenses",
+                teacher: "Ms. Fatima",
+                time: "2:00 PM",
+                duration: "30 min",
+                students: 890,
+                isLive: false,
+                thumbnail: "fas fa-language"
+            },
+            {
+                id: 3,
+                title: "Physics - Motion and Force",
+                teacher: "Prof. Ahmed",
+                time: "4:00 PM",
+                duration: "60 min",
+                students: 2100,
+                isLive: true,
+                thumbnail: "fas fa-atom"
+            }
+        ];
+        displayLiveClasses(liveClasses);
+    } catch (error) {
+        console.error('Error loading live classes:', error);
+    }
+}
+
+function displayLiveClasses(classes) {
+    const container = document.getElementById('liveClassesContainer');
+    if (!container) return;
+    
+    container.innerHTML = classes.map(cls => `
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+            <div class="live-class-card">
+                ${cls.isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                <div class="class-thumbnail">
+                    <i class="${cls.thumbnail}"></i>
+                </div>
+                <div class="class-info">
+                    <h5 class="class-title">${cls.title}</h5>
+                    <p class="class-teacher">by ${cls.teacher}</p>
+                    <div class="class-meta">
+                        <span class="class-time">
+                            <i class="fas fa-clock me-1"></i>${cls.time}
+                        </span>
+                        <span class="class-students">
+                            <i class="fas fa-users me-1"></i>${cls.students} students
+                        </span>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="joinLiveClass('${cls.id}')">
+                        ${cls.isLive ? '<i class="fas fa-play me-2"></i>Join Now' : '<i class="fas fa-calendar me-2"></i>Set Reminder'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Model Tests Functions
+async function loadModelTests() {
+    try {
+        // For demo purposes, create sample model tests
+        modelTests = [
+            {
+                id: 1,
+                title: "SSC Mathematics Model Test 2024",
+                subject: "Mathematics",
+                questions: 50,
+                duration: "90 min",
+                difficulty: "Medium",
+                attempts: 15420,
+                avgScore: 78
+            },
+            {
+                id: 2,
+                title: "HSC Physics Practice Test",
+                subject: "Physics",
+                questions: 40,
+                duration: "60 min",
+                difficulty: "Hard",
+                attempts: 8920,
+                avgScore: 65
+            },
+            {
+                id: 3,
+                title: "English Grammar Test",
+                subject: "English",
+                questions: 30,
+                duration: "45 min",
+                difficulty: "Easy",
+                attempts: 25680,
+                avgScore: 85
+            }
+        ];
+        displayModelTests(modelTests);
+    } catch (error) {
+        console.error('Error loading model tests:', error);
+    }
+}
+
+function displayModelTests(tests) {
+    const container = document.getElementById('modelTestsContainer');
+    if (!container) return;
+    
+    container.innerHTML = tests.map(test => `
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+            <div class="model-test-card">
+                <div class="test-header">
+                    <h5 class="test-title">${test.title}</h5>
+                    <span class="test-difficulty">${test.difficulty}</span>
+                </div>
+                <div class="test-stats">
+                    <div class="test-stat">
+                        <div class="test-stat-number">${test.questions}</div>
+                        <div class="test-stat-label">Questions</div>
+                    </div>
+                    <div class="test-stat">
+                        <div class="test-stat-number">${test.duration}</div>
+                        <div class="test-stat-label">Duration</div>
+                    </div>
+                    <div class="test-stat">
+                        <div class="test-stat-number">${test.avgScore}%</div>
+                        <div class="test-stat-label">Avg Score</div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <small class="text-muted">
+                        <i class="fas fa-users me-1"></i>${test.attempts} attempts
+                    </small>
+                    <span class="badge bg-primary">${test.subject}</span>
+                </div>
+                <button class="btn btn-success w-100" onclick="startModelTest('${test.id}')">
+                    <i class="fas fa-play me-2"></i>Start Test
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Leaderboard Functions
+async function loadLeaderboard() {
+    try {
+        // For demo purposes, create sample leaderboard
+        leaderboard = [
+            { rank: 1, name: "Ahmed Rahman", score: 95, avatar: "A" },
+            { rank: 2, name: "Fatima Khan", score: 92, avatar: "F" },
+            { rank: 3, name: "Mohammad Ali", score: 89, avatar: "M" },
+            { rank: 4, name: "Sara Ahmed", score: 87, avatar: "S" },
+            { rank: 5, name: "Rahim Uddin", score: 85, avatar: "R" }
+        ];
+        displayLeaderboard(leaderboard);
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+    }
+}
+
+function displayLeaderboard(leaderboardData) {
+    const container = document.getElementById('leaderboardContainer');
+    if (!container) return;
+    
+    container.innerHTML = leaderboardData.map(user => `
+        <div class="leaderboard-item">
+            <div class="leaderboard-rank rank-${user.rank <= 3 ? user.rank : 'other'}">
+                ${user.rank}
+            </div>
+            <div class="leaderboard-user">
+                <div class="leaderboard-name">${user.name}</div>
+                <small class="text-muted">${user.avatar}</small>
+            </div>
+            <div class="leaderboard-score">${user.score}%</div>
+        </div>
+    `).join('');
+}
+
 // Course functions
 async function loadCourses() {
     try {
-        const response = await fetch('/api/courses');
-        const courses = await response.json();
+        // For demo purposes, create sample courses
+        courses = [
+            {
+                id: 1,
+                title: "Ghore Boshe Spoken English",
+                instructor: "Ms. Sarah",
+                duration: "20 hours",
+                students: 15420,
+                rating: 4.8,
+                price: "Free",
+                thumbnail: "fas fa-comments"
+            },
+            {
+                id: 2,
+                title: "Video Editing with Premiere Pro",
+                instructor: "Mr. Karim",
+                duration: "15 hours",
+                students: 8920,
+                rating: 4.6,
+                price: "৳2,500",
+                thumbnail: "fas fa-video"
+            },
+            {
+                id: 3,
+                title: "Digital Marketing Masterclass",
+                instructor: "Dr. Hasan",
+                duration: "25 hours",
+                students: 12300,
+                rating: 4.9,
+                price: "৳3,500",
+                thumbnail: "fas fa-chart-line"
+            }
+        ];
         displayCourses(courses);
     } catch (error) {
         console.error('Error loading courses:', error);
@@ -425,6 +701,100 @@ function showToast(message, type = 'info') {
     bsToast.show();
     
     // Remove after hidden
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+    });
+}
+
+// Action Functions for 10Minutes School + LiveMCQ Features
+
+function joinLiveClass(classId) {
+    if (!currentUser) {
+        showToast('Please login to join live classes', 'warning');
+        return;
+    }
+    
+    const liveClass = liveClasses.find(cls => cls.id == classId);
+    if (liveClass) {
+        if (liveClass.isLive) {
+            // Join live class
+            showToast(`Joining live class: ${liveClass.title}`, 'success');
+            // Here you would integrate with video streaming service
+            window.open(`live-class.html?id=${classId}`, '_blank');
+        } else {
+            // Set reminder for upcoming class
+            showToast(`Reminder set for: ${liveClass.title}`, 'info');
+        }
+    }
+}
+
+function startModelTest(testId) {
+    if (!currentUser) {
+        showToast('Please login to take model tests', 'warning');
+        return;
+    }
+    
+    const test = modelTests.find(t => t.id == testId);
+    if (test) {
+        showToast(`Starting model test: ${test.title}`, 'success');
+        // Navigate to model test page
+        window.location.href = `model-test.html?id=${testId}`;
+    }
+}
+
+function loadMoreLiveClasses() {
+    showToast('Loading more live classes...', 'info');
+    // In real implementation, load more from API
+    setTimeout(() => {
+        showToast('More live classes loaded!', 'success');
+    }, 1000);
+}
+
+function loadMoreModelTests() {
+    showToast('Loading more model tests...', 'info');
+    // In real implementation, load more from API
+    setTimeout(() => {
+        showToast('More model tests loaded!', 'success');
+    }, 1000);
+}
+
+function loadMoreCourses() {
+    showToast('Loading more courses...', 'info');
+    // In real implementation, load more from API
+    setTimeout(() => {
+        showToast('More courses loaded!', 'success');
+    }, 1000);
+}
+
+function closeNotification() {
+    const notification = document.querySelector('.top-notification');
+    if (notification) {
+        notification.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 500);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification toast
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0 position-fixed top-0 end-0 m-3`;
+    toast.setAttribute('role', 'alert');
+    toast.style.zIndex = '9999';
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
     toast.addEventListener('hidden.bs.toast', () => {
         document.body.removeChild(toast);
     });
