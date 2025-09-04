@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz - Shikkha Jatra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Shikkha Jatra
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-2"></i>
+                        <span id="userName">User</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#profile">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-5">
+        <!-- Quiz Selection -->
+        <div id="quizSelection" class="quiz-section">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <h2 class="mb-4">Available Quizzes</h2>
+                            <div id="availableQuizzes">
+                                <!-- Quizzes will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quizInterface" class="quiz-section d-none">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0" id="quizTitle">Quiz Title</h4>
+                                <div class="quiz-timer">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <span id="timer" class="fw-bold">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-4">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            
+                            <div id="questionContainer">
+                                <!-- Questions will be displayed here -->
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </button>
+                                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                                    Next<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button class="btn btn-success btn-lg" id="submitBtn" onclick="submitQuiz()" style="display: none;">
+                                    Submit Quiz
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quiz Navigation Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5 class="mb-0">Question Navigator</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="questionNavigator">
+                                <!-- Question numbers will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Results -->
+        <div id="quizResults" class="quiz-section d-none">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <h2 class="mb-4">Quiz Results</h2>
+                            <div id="resultsContent">
+                                <!-- Results will be displayed here -->
+                            </div>
+                            <div class="mt-4">
+                                <button class="btn btn-primary me-2" onclick="reviewQuiz()">
+                                    <i class="fas fa-eye me-2"></i>Review Answers
+                                </button>
+                                <button class="btn btn-success" onclick="goToDashboard()">
+                                    <i class="fas fa-home me-2"></i>Go to Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/quiz.js"></script>
+</body>
+</html>
